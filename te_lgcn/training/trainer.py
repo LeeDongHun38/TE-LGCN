@@ -1,30 +1,11 @@
-"""
-Trainer class for TE-LGCN models.
-
-Handles training loop, validation, and model checkpointing.
-"""
+"""Trainer for TE-LGCN models."""
 
 import torch
 from te_lgcn.training.losses import combined_loss
 
 
 class Trainer:
-    """
-    Trainer for TE-LGCN and baseline LightGCN models.
-
-    Args:
-        model: The model to train
-        optimizer: PyTorch optimizer
-        device: Device to train on ('cuda' or 'cpu')
-        lambda1 (float): L2 regularization weight
-        lambda2 (float): Content consistency loss weight
-
-    Example:
-        >>> model = TELightGCN(...)
-        >>> optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-        >>> trainer = Trainer(model, optimizer, device='cuda', lambda1=1e-5, lambda2=1e-3)
-        >>> trainer.train_epoch(train_data)
-    """
+    """Trainer for TE-LGCN and baseline LightGCN models."""
 
     def __init__(self, model, optimizer, device, lambda1=1e-5, lambda2=1e-3):
         self.model = model
@@ -34,27 +15,21 @@ class Trainer:
         self.lambda2 = lambda2
 
     def train_epoch(self, train_loader):
-        """
-        Train for one epoch.
-
-        Args:
-            train_loader: DataLoader providing (users, pos_items, neg_items) batches
-
-        Returns:
-            float: Average loss for the epoch
-        """
+        """Train for one epoch with efficient graph propagation."""
         self.model.train()
         total_loss = 0.0
         num_batches = 0
+
+        # Compute graph propagation once per epoch (not per batch)
+        with torch.no_grad():
+            user_final, item_final = self.model.get_all_embeddings()
 
         for users, pos_items, neg_items in train_loader:
             users = users.to(self.device)
             pos_items = pos_items.to(self.device)
             neg_items = neg_items.to(self.device)
 
-            # Forward pass
-            user_final, item_final = self.model.get_all_embeddings()
-
+            # Lookup embeddings from pre-computed propagation
             u_final = user_final[users]
             i_pos_final = item_final[pos_items]
             i_neg_final = item_final[neg_items]
@@ -67,13 +42,8 @@ class Trainer:
             # Topic embeddings (if using TE-LGCN)
             if hasattr(self.model, 'topic_emb'):
                 t_0 = self.model.topic_emb.weight
-                # Fixed Doc2Vec embeddings
-                if hasattr(self.model, 'fixed_doc2vec') and self.model.fixed_doc2vec is not None:
-                    fixed_vec = self.model.fixed_doc2vec[pos_items]
-                else:
-                    fixed_vec = None
+                fixed_vec = self.model.fixed_doc2vec[pos_items] if hasattr(self.model, 'fixed_doc2vec') and self.model.fixed_doc2vec is not None else None
             else:
-                # For baseline LightGCN, no topics
                 t_0 = torch.zeros(1, self.model.dim, device=self.device)
                 fixed_vec = None
 
@@ -92,8 +62,7 @@ class Trainer:
             total_loss += loss.item()
             num_batches += 1
 
-        avg_loss = total_loss / num_batches if num_batches > 0 else 0.0
-        return avg_loss
+        return total_loss / num_batches if num_batches > 0 else 0.0
 
     def save_checkpoint(self, path):
         """Save model checkpoint."""
