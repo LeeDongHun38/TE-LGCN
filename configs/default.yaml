@@ -1,0 +1,51 @@
+# Default configuration for TE-LGCN
+
+# Data paths
+data:
+  base_path: "data"
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  embeddings_path: "data/embeddings"
+
+# Model hyperparameters
+model:
+  dim: 64                    # Embedding dimension
+  layers: 3                  # Number of GCN layers
+  n_topics: 10              # Number of LDA topics (7, 10, 15, or 20)
+
+# Training
+training:
+  batch_size: 1024
+  epochs: 50
+  lr: 0.001                  # Learning rate
+  lambda1: 0.00001          # L2 regularization weight (1e-5)
+  lambda2: 0.001            # Content consistency loss weight (1e-3)
+
+# Data preprocessing
+preprocessing:
+  k_core: 5                  # K-core filtering (5 or 10)
+  rating_threshold: 4.0      # Minimum rating for positive interaction
+
+# Feature extraction
+doc2vec:
+  vector_size: 64
+  window: 5
+  epochs: 20
+  min_count: 1
+  workers: 4
+
+lda:
+  n_topics: 10
+  alpha: "auto"
+  passes: 10
+  threshold: 0.1            # Minimum probability for topic assignment
+
+# Evaluation
+evaluation:
+  k: 10                      # Top-K for metrics (Recall@K, NDCG@K)
+
+# Random seed
+seed: 42
+
+# Device
+device: "cuda"              # "cuda" or "cpu"
