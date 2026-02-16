@@ -359,7 +359,7 @@ If you use this code in your research, please cite:
 @software{te_lgcn_2026,
   title={Topic-Enhanced LightGCN: A Dual Enhancement Strategy for Recommendation},
   author={TE-LGCN Research Team},
-  year={2026},
+  year={2025},
   url={https://github.com/yourusername/topic-enhanced-lightgcn}
 }
 ```
@@ -384,8 +384,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions or issues:
 - **Issues**: [GitHub Issues](https://github.com/yourusername/topic-enhanced-lightgcn/issues)
-- **Email**: your.email@example.com
+- **Email**: hueny0238@gmail.com
 
 ---
-
-**Built with ❤️ for the recommendation systems research community**
