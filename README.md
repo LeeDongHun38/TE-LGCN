@@ -6,6 +6,8 @@
 
 A novel recommendation system that enhances LightGCN with semantic content features through a dual enhancement strategy combining Doc2Vec embeddings and LDA topic modeling.
 
+**For full methodology & ablations, see "Topic-Enhanced LightGCN (TE-LGCN).pdf".**
+
 ## 🎯 Overview
 
 **TE-LGCN (Topic-Enhanced LightGCN)** addresses the cold-start problem and improves recommendation quality by incorporating content-based semantic information into graph collaborative filtering. Unlike vanilla LightGCN which relies solely on user-item interactions, TE-LGCN leverages:
@@ -72,8 +74,8 @@ from te_lgcn.evaluation import evaluate_model
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/topic-enhanced-lightgcn.git
-cd topic-enhanced-lightgcn
+git clone https://github.com/LeeDongHun38/TE-LGCN.git
+cd TE-LGCN
 
 # Install dependencies
 pip install -r requirements.txt
