@@ -203,14 +203,42 @@ This project uses the **MovieLens dataset** with additional movie plot summaries
 
 ### Download Data
 
-The actual data files are not included in this repository. Please:
+**⚠️ Preprocessing Required**: This repository provides the raw dataset. You must run preprocessing notebooks to generate train/val/test splits and feature embeddings.
 
-1. Download MovieLens dataset from [GroupLens](https://grouplens.org/datasets/movielens/)
-2. Place files in `data/raw/`:
-   - `ratings.csv`
-   - `movies.csv`
-   - `movie_data_final_clean.csv` (plot summaries)
-3. Run preprocessing notebook to generate processed data
+#### Step 1: Download Raw Data
+
+Download the preprocessed MovieLens dataset from Google Drive:
+
+**[📥 Download `TE-LGCN_data.csv` from Google Drive](https://drive.google.com/file/d/19UUrYfN82KD_tiONq7lFp7j26q_xaEd3/view?usp=drive_link)**
+
+This file contains 99,795 user-item rating interactions (671 users × 9,012 items).
+
+#### Step 2: Place Data File
+
+```bash
+# Place the downloaded file in the project root
+topic-enhanced-lightgcn/
+└── TE-LGCN_data.csv  # ← Place here
+```
+
+#### Step 3: Run Preprocessing Notebooks
+
+**Required preprocessing steps** (execute in order):
+
+1. **Data Filtering & Splitting**: `notebooks/preprocessing/data_preparation.ipynb`
+   - Applies k-core filtering (k=5, k=10)
+   - Creates train/val/test splits (leave-one-out)
+   - Generates `data/processed/k5_filtered/` and `k10_filtered/`
+
+2. **Doc2Vec Embeddings**: `notebooks/feature_extraction/doc2vec_embeddings.ipynb`
+   - Trains 64-dimensional Doc2Vec embeddings
+   - Generates `data/embeddings/doc2vec_embeddings_64d.pkl`
+
+3. **LDA Topics**: `notebooks/feature_extraction/lda_topics.ipynb`
+   - Extracts topic distributions (k=7,10,15,20)
+   - Generates `data/processed/topic_vectors_*.csv`
+
+**Note**: Update file paths in notebooks if running locally (they use Google Colab paths by default).
 
 See [`data/README.md`](data/README.md) for detailed data structure and usage.
 
