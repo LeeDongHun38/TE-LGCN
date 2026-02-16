@@ -6,7 +6,7 @@
 
 A novel recommendation system that enhances LightGCN with semantic content features through a dual enhancement strategy combining Doc2Vec embeddings and LDA topic modeling.
 
-**For full methodology & ablations, see "Topic-Enhanced LightGCN (TE-LGCN).pdf".**
+**For full methodology & ablations, see docs/Topic-Enhanced LightGCN (TE-LGCN).pdf.**
 
 ## 🎯 Overview
 
